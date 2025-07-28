@@ -1,0 +1,3 @@
+# Ceci Westbrook, 7/2025
+
+This directory contains the level 1 and level 2 scripts for PPI analyses. First, ROIs were defined in MNI space and timeseries were extracted from the preprocessed data. These seed timeseries were included as regressors in the level 1 models, in addition to the interaction between the regressors and regressors of interest (i.e., psychophysiological interaction). These were batch-run using SLURM, and the outputs were again averaged at Level 2 as per the primary analyses.
