@@ -7,7 +7,9 @@ All code and associated documents were written by Ceci Westbrook 2022-2025 unles
 Participants provided self-generated repetitive thought (RT) topics during an interview on a preceding session, which were converted to scanner stimuli. The fMRI task was completed on a subsequent visit, during which they were also instructed in worry disengagement strategies. The task comprised 3 runs of 9 trials each. For each trial, self-generated RT stimuli were presented for ~30s, followed by a 30s disengagement period in which participants completed a competing attention task (the Sustained Attention to Responses Task, SART). Following the SART, participants responded to thought probes including degree of uncontrollability of thoughts (i.e., disengagement success).
 
  # How to use this repository: # 
-This dataset was analyzed primarily using FSL's Feat program, which takes design files (.fsf) as input. These files can be batch-edited and submitted, which was the approach used here, following Jeanette Mumford's approach (please see: https://www.youtube.com/playlist?list=PLB2iAtgpI4YHlH4sno3i3CUjCofI38a-3). The order of use for these scripts are:
+ Behavioral analyses were completed using R. Please see behav_analyses/ for an RMarkdown file with raw output.
+ 
+fMRI files in this dataset were analyzed primarily using FSL's Feat program, which takes design files (.fsf) as input. These files can be batch-edited and submitted, which was the approach used here, following Jeanette Mumford's approach (please see: https://www.youtube.com/playlist?list=PLB2iAtgpI4YHlH4sno3i3CUjCofI38a-3). The order of use for these scripts are:
  1) Preprocessing using fmriprep (batch call located in this directory)
  2) level 1 analyses conducted by batch-editing the template .fsf scripts found in the level1/ directory
  3) the same process for level 2 analyses; and finally
