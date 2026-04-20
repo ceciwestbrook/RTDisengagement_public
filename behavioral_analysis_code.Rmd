@@ -1,0 +1,545 @@
+---
+title: "RT_Disengagement_raw_output"
+output: html_document
+date: "2026-04-20"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+ Ceci Westbrook, 2026
+ This is a subsection of analysis code for the purpose of demonstrating raw output. Some important functions 
+ (e.g., file readin) are removed to maintain data anonymity.
+
+```{r include = FALSE}
+library(dplyr)
+library(reshape2)
+library(lme4)
+library(lmerTest)
+library(ggplot2)
+library(tidyverse)
+
+dest_vol <- file.path("/Users/westbrook/OneDrive - UPMC/Documents/Hallion/PT disengagement/behav_analyses")
+load(file.path(dest_vol,"TReWBehavDataAll.Rdata"))
+```
+
+After reading in our data, let's make a composite dyscontrol score
+Q3_1 = repetitive; Q3_2 = intrusive; Q3_3 = uncontrollable
+
+```{r}
+alldata$dyscontrol <- rowMeans(alldata[,c("Q3_1","Q3_2","Q3_3")],na.rm=T)
+```
+
+now let's make the imputed score where NAs are replaced with zeros
+```{r}
+alldata$Q3_1_imputed <- ifelse(is.na(alldata$Q3_1),0,alldata$Q3_1)
+alldata$Q3_2_imputed <- ifelse(is.na(alldata$Q3_2),0,alldata$Q3_2)
+alldata$Q3_3_imputed <- ifelse(is.na(alldata$Q3_3),0,alldata$Q3_3)
+alldata$dyscontrol_imputed <- rowMeans(alldata[,c("Q3_1_imputed","Q3_2_imputed","Q3_3_imputed")],na.rm=T)
+```
+
+## Analyses
+### Pre-scan dyscontrol ratings
+
+Skill index (note: this was inaccurately called 'accuracy index' at first)  
+Imputed scores:
+
+```{r warning = FALSE}
+m1 <- lmer(scale(dyscontrol_imputed) ~ scale(AccIndex) + (1 + AccIndex|participant), data = alldata)
+summary(m1)
+confint(m1)
+```
+Raw scores - effect is the same:
+```
+m1 <- lmer(scale(dyscontrol) ~ scale(AccIndex) + (1 + AccIndex|participant), data = alldata)
+summary(m1)
+confint(m1)
+```
+
+```
+plotting
+```{r warning = FALSE}
+g <- ggplot(alldata,aes(x=dyscontrol,y=AccIndex))
+g + geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(dyscontrol,AccIndex), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  scale_x_continuous(name="Pre-scan Dyscontrol Rating") +
+  scale_y_continuous(name="SART Skill Index")
+```
+
+checking for influential outlier: model remains significant
+```{r warning = FALSE}
+m1 <- lmer(scale(dyscontrol_imputed) ~ scale(AccIndex) + (1 + AccIndex|participant), data = alldata[alldata$participant!=393,])
+summary(m1)
+confint(m1)
+```
+
+## looking at speed/accuracy differences:  
+## Accuracy  
+linear model is significant--but not for imputed values
+```{r warning = FALSE}
+m1 <- lm(dyscontrol ~ NoGo_ACC, data = alldata)
+summary(m1)
+
+m1 <- lm(dyscontrol_imputed ~ NoGo_ACC, data = alldata)
+summary(m1)
+```
+MLM is NOT significant for either
+```{r warning = FALSE}
+m1 <- lmer(scale(dyscontrol_imputed) ~ scale(NoGo_ACC) + (1+NoGo_ACC|participant), data = alldata)
+summary(m1)
+confint(m1)
+
+m1 <- lmer(scale(dyscontrol) ~ scale(NoGo_ACC) + (1+NoGo_ACC|participant), data = alldata)
+summary(m1)
+confint(m1)
+```
+
+plotting
+```{r warning = FALSE}
+g <- ggplot(alldata,aes(x=dyscontrol_imputed,y=NoGo_ACC))
+g + geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(dyscontrol_imputed,NoGo_ACC), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  scale_x_continuous(name="Pre-scan Dyscontrol Rating") +
+  scale_y_continuous(name="No-Go Accuracy") 
+```
+
+## Speed  
+linear model is significant
+```{r warning = FALSE}
+m1 <- lm(dyscontrol_imputed ~ Mean_go_RT, data = alldata)
+summary(m1)
+
+m1 <- lm(dyscontrol ~ Mean_go_RT, data = alldata)
+summary(m1)
+```
+
+multi-level model IS significant
+```{r warning = FALSE}
+m1 <- lmer(scale(dyscontrol_imputed) ~ scale(Mean_go_RT) + (1 + Mean_go_RT|participant), data = alldata)
+summary(m1)
+confint(m1)
+
+m1 <- lmer(scale(dyscontrol) ~ scale(Mean_go_RT) + (1 + Mean_go_RT|participant), data = alldata)
+summary(m1)
+confint(m1)
+```
+plotting
+```{r warning = FALSE}
+g <- ggplot(alldata,aes(x=dyscontrol_imputed,y=Mean_go_RT))
+g + geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(dyscontrol_imputed,Mean_go_RT), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  scale_x_continuous(name="Pre-scan Dyscontrol Rating\n (repetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="Mean Go RT") #+ geom_text(label = alldata$participant)
+```
+
+and robust to outliers:
+```{r warning = FALSE}
+meanRTsbysubj <- alldata %>% group_by(participant) %>% summarise(overall_mean_RT = mean(Mean_go_RT,na.rm=T))
+meanRTsbysubj[which(meanRTsbysubj$overall_mean_RT > mean(meanRTsbysubj$overall_mean_RT) + 3*sd(meanRTsbysubj$overall_mean_RT)),]
+
+m1 <- lmer(scale(dyscontrol_imputed) ~ scale(Mean_go_RT) + (1 + Mean_go_RT|participant), data = alldata[alldata$participant!=393,])
+summary(m1)
+confint(m1)
+
+m1 <- lmer(scale(dyscontrol) ~ scale(Mean_go_RT) + (1 + Mean_go_RT|participant), data = alldata[alldata$participant!=393,])
+summary(m1)
+confint(m1)
+```
+plotting w/o outlier
+```{r warning = FALSE}
+g <- ggplot(alldata[alldata$participant!=393,],aes(x=dyscontrol_imputed,y=Mean_go_RT))
+g + geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(dyscontrol_imputed,Mean_go_RT), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  scale_x_continuous(name="Pre-scan Dyscontrol Rating\n (repetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="Mean Go RT") 
+```
+
+```{r warning = FALSE}
+# one big combined plot
+g1 <- ggplot(alldata[alldata$participant!=393,],aes(x=dyscontrol_imputed,y=AccIndex)) +
+  geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(dyscontrol_imputed,AccIndex), lwd = 2, alpha = 1) +
+  annotate(
+    geom = "text",
+    x = 5.0,
+    y = 2.5,
+    label = "*",
+    color="red",
+    size = 10) +
+  theme(legend.position="none") +
+  theme(axis.title.x = element_blank()) + theme(axis.title.y = element_text(size=18)) +
+  scale_x_continuous(name="Pre-Scan Uncontrollability Rating (How much is this thought repetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="Skill Index (arbitrary units)") 
+
+g2 <- ggplot(alldata[alldata$participant!=393,],aes(x=dyscontrol_imputed,y=NoGo_ACC)) +
+  geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(dyscontrol_imputed,NoGo_ACC), lwd = 2, alpha = 1) +
+  theme(legend.position="none") + theme(axis.title.y = element_text(size=18),axis.title.x = element_text(size=18)) +
+  scale_x_continuous(name="Pre-Scan Uncontrollability Rating (How much is this thought repetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="No-Go Accuracy (percent correct)") 
+
+g3 <- ggplot(alldata[alldata$participant!=393,],aes(x=dyscontrol_imputed,y=Mean_go_RT)) +
+  geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(dyscontrol_imputed,Mean_go_RT), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  annotate(
+    geom = "text",
+    x = 5.0,
+    y = 1.0,
+    label = "†",
+    color="red",
+    size = 8) +
+  theme(axis.title.x = element_blank()) + theme(axis.title.y = element_text(size=18)) +
+  scale_x_continuous(name="Pre-Scan Uncontrollability Rating (How much is this thought repetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="Mean Go RT (s)") 
+
+library(egg)
+plot3 <- ggarrange(g1,g2,g3,ncol=3)
+```
+
+# Thought probes  
+```{r include = FALSE}
+alldata$probe1 <- as.numeric(alldata$probe1)
+alldata$probe2 <- as.numeric(alldata$probe2)
+alldata$probe3 <- as.numeric(alldata$probe3)
+alldata$probe4 <- as.numeric(alldata$probe4)
+alldata$probe5 <- as.numeric(alldata$probe5)
+alldata$probe6 <- as.numeric(alldata$probe6)
+```
+## Probe 1: End-of-trial dyscontrol (To what extent were your thoughts repetitive, intrusive, or hard to control?")  
+  
+## Skill index
+run only as multilevel models - significant
+```{r warning = FALSE}
+m1 <- lmer(probe1 ~ AccIndex + (1+AccIndex|participant), data = alldata)
+summary(m1)
+
+m1 <- lmer(scale(probe1) ~ scale(AccIndex) + (1+AccIndex|participant), data = alldata)
+summary(m1)
+confint(m1)
+```
+
+adding baseline dyscontrol - still significant!
+```{r warning = FALSE}
+m1 <- lmer(scale(probe1) ~ scale(AccIndex) + scale(dyscontrol_imputed) + (1+AccIndex|participant), data = alldata)
+summary(m1)
+confint(m1)
+
+m1 <- lmer(scale(probe1) ~ scale(AccIndex) + (1+AccIndex|participant), data = alldata[alldata$participant!=393,])
+summary(m1)
+confint(m1)
+
+m1 <- lmer(scale(probe1) ~ scale(AccIndex) + scale(dyscontrol_imputed) + (1+AccIndex|participant), data = alldata[alldata$participant!=393,])
+summary(m1)
+confint(m1)
+```
+
+adding task effort - still significant
+```{r warning = FALSE}
+m1 <- lmer(scale(probe1) ~ scale(AccIndex) + scale(probe3) + (1+AccIndex|participant), data = alldata)
+summary(m1)
+confint(m1)
+```
+
+plotting
+```{r warning = FALSE}
+g <- ggplot(alldata,aes(x=probe1,y=AccIndex))
+g + geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe1,AccIndex), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  scale_x_continuous(name="End-of-trial Dyscontrol Rating\n (How much were thoughts\nrepetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="Accuracy Index") 
+```
+
+## Speed/accuracy breakdown  
+Speed
+```{r warning = FALSE}
+m1 <- lmer(scale(probe1) ~ scale(Mean_go_RT) + (1+Mean_go_RT|participant), data = alldata[alldata$Mean_go_RT<1.0,])
+summary(m1)
+confint(m1)
+```
+plotting
+```{r warning = FALSE}
+g <- ggplot(alldata[alldata$Mean_go_RT<1.0,],aes(x=probe1,y=Mean_go_RT))
+g + geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe1,Mean_go_RT), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  scale_x_continuous(name="End-of-trial Dyscontrol Rating\n (How much were thoughts\nrepetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="Mean Go RT") 
+```
+
+not quite robust to one outlier
+```{r warning = FALSE}
+m1 <- lmer(scale(probe1) ~ scale(Mean_go_RT) + (1+Mean_go_RT|participant), data = alldata[alldata$participant!=393,])
+summary(m1)
+confint(m1)
+```
+plotting w/o outlier
+```{r warning = FALSE}
+g <- ggplot(alldata[alldata$participant!=393,],aes(x=probe1,y=Mean_go_RT))
+g + geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe1,Mean_go_RT), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  scale_x_continuous(name="End-of-trial Dyscontrol Rating\n (How much were thoughts\nrepetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="Mean Go RT") 
+```
+
+not significant if baseline dyscontrol included
+```{r warning = FALSE}
+m1 <- lmer(scale(probe1) ~ scale(Mean_go_RT) + scale(dyscontrol_imputed) + (1+Mean_go_RT|participant), data = alldata[alldata$Mean_go_RT<1.0,])
+summary(m1)
+confint(m1)
+```
+
+## Accuracy
+```{r warning = FALSE}
+m1 <- lmer(scale(probe1) ~ scale(NoGo_ACC) + (1+NoGo_ACC|participant), data = alldata)
+summary(m1)
+confint(m1)
+
+m1 <- lmer(scale(probe1) ~ scale(NoGo_ACC) + (1+NoGo_ACC|participant), data = alldata[alldata$participant!=393,])
+summary(m1)
+confint(m1)
+
+m1 <- lmer(scale(probe1) ~ scale(NoGo_ACC) + scale(dyscontrol_imputed) + (1+NoGo_ACC|participant), data = alldata[alldata$participant!=393,])
+summary(m1)
+confint(m1)
+```
+plotting
+```{r warning = FALSE}
+g <- ggplot(alldata[alldata$NoGo_ACC<1.0,],aes(x=probe1,y=NoGo_ACC))
+g + geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe1,NoGo_ACC), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  scale_x_continuous(name="End-of-trial Dyscontrol (repetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="No-Go Accuracy") 
+
+g <- ggplot(alldata[alldata$participant!=393,],aes(x=probe1,y=NoGo_ACC))
+g + geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe1,NoGo_ACC), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  scale_x_continuous(name="End-of-trial Dyscontrol (repetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="No-Go Accuracy") 
+```
+
+one big combined plot
+```{r warning = FALSE}
+g1 <- ggplot(alldata[alldata$participant!=393,],aes(x=probe1,y=AccIndex)) +
+  geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe1,AccIndex), lwd = 2, alpha = 1) +
+  annotate(
+    geom = "text",
+    x = 50,
+    y = 2.5,
+    label = "*",
+    color="red",
+    size = 10) +
+  theme(legend.position="none") +
+  theme(axis.title.x = element_blank()) + theme(axis.title.y = element_text(size=18)) +
+  scale_x_continuous(name="End-of-trial Uncontrollability (How much were thoughts repetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="Skill Index (arbitrary units)") 
+
+g2 <- ggplot(alldata[alldata$participant!=393,],aes(x=probe1,y=NoGo_ACC)) +
+  geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe1,NoGo_ACC), lwd = 2, alpha = 1) +
+  theme(legend.position="none") + theme(axis.title.y = element_text(size=18), axis.title.x = element_text(size=18)) +
+  scale_x_continuous(name="End-of-trial Uncontrollability (How much were thoughts repetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="No-Go Accuracy (percent correct)") 
+
+g3 <- ggplot(alldata[alldata$participant!=393,],aes(x=probe1,y=Mean_go_RT)) +
+  geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe1,Mean_go_RT), lwd = 2, alpha = 1) +
+  annotate(
+    geom = "text",
+    x = 50,
+    y = 0.9,
+    label = "*",
+    color="red",
+    size = 10) +
+  theme(legend.position="none") +
+  theme(axis.title.x = element_blank()) + theme(axis.title.y = element_text(size=18)) +
+  scale_x_continuous(name="End-of-trial Uncontrollability (How much were thoughts repetitive, intrusive, or hard to control?)") +
+  scale_y_continuous(name="Mean Go RT (s)") 
+
+library(egg)
+plot3 <- ggarrange(g1,g2,g3,ncol=3)
+```
+
+# Probe 3: Task effort ("To what extent were you trying (making an effort) to focus on the task?")  
+
+Skill index, accuracy and speed
+
+```{r warning = FALSE}
+m1 <- lmer(AccIndex ~ probe3 + (1|participant), data = alldata)
+summary(m1)
+
+m2 <- lmer(NoGo_ACC ~ probe3 + (1|participant), data = alldata)
+summary(m2)
+
+m3 <- lmer(Mean_go_RT ~ probe3 + (1|participant), data = alldata)
+summary(m3)
+```
+
+Relationship to end-of-trial dyscontrol
+```{r warning = FALSE}
+m4 <- lmer(probe1 ~ probe3 + (1|participant), data = alldata)
+summary(m4)
+```
+one big combined plot
+```{r warning = FALSE}
+g1 <- ggplot(alldata,aes(x=probe3,y=AccIndex)) +
+  geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe3,AccIndex), lwd = 2, alpha = 1) +
+  annotate(
+    geom = "text",
+    x = 50,
+    y = 2.5,
+    label = "*",
+    color="red",
+    size = 10) +
+  theme(legend.position="none") +
+  theme(axis.title.x = element_blank()) + theme(axis.title.y = element_text(size=18)) +
+  scale_x_continuous(name="End-of-trial Effort (were you trying (making an effort) to focus on the task?)") +
+  scale_y_continuous(name="Skill Index (arbitrary units)") 
+
+g2 <- ggplot(alldata,aes(x=probe3,y=NoGo_ACC)) +
+  geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe3,NoGo_ACC), lwd = 2, alpha = 1) +
+  theme(legend.position="none") + theme(axis.title.y = element_text(size=18),axis.title.x = element_text(size=18)) +
+  scale_x_continuous(name="End-of-trial Effort (were you trying (making an effort) to focus on the task?)") +
+  scale_y_continuous(name="No-Go Accuracy (percent correct)") 
+
+g3 <- ggplot(alldata,aes(x=probe3,y=Mean_go_RT)) +
+  geom_point(aes(color=as.factor(participant)), alpha = 0.4) +
+  geom_line(stat="smooth",method="lm", alpha = 0.4, aes(color = as.factor(participant)), size = 0.5, se = F) +
+  geom_smooth(data = alldata, method = "lm", aes(probe3,Mean_go_RT), lwd = 2, alpha = 1) +
+  theme(legend.position="none") +
+  annotate(
+    geom = "text",
+    x = 50,
+    y = 1.0,
+    label = "†",
+    color="red",
+    size = 8) +
+  theme(axis.title.x = element_blank()) + theme(axis.title.y = element_text(size=18)) +
+  scale_x_continuous(name="End-of-trial Effort (were you trying (making an effort) to focus on the task?)") +
+  scale_y_continuous(name="Mean Go RT (s)") 
+
+library(egg)
+plot3 <- ggarrange(g1,g2,g3,ncol=3)
+```
+
+# Investigating missing data
+```{r include = FALSE}
+alldata[,c(1,16:51)]
+library(naniar)
+```
+Check for missingness at random: suggests data are NOT missing completely at random
+```{r warning = FALSE}
+mcar_test(alldata[,c(16:51)]) # p < .03
+```
+
+```{r include = FALSE}
+long_df <- alldata[,c(1:2,16:51)] %>%
+  pivot_longer(
+    cols = starts_with("Q"),
+    names_to = "category",
+    values_to = "rating"
+  )
+
+long_df_model <- long_df %>%
+  mutate(
+    is_na = is.na(rating),
+    is_zero = ifelse(rating == 0, 1, 0)  # this will be NA when rating is NA
+  )
+long_df_model <- long_df_model %>%
+  mutate(is_zero = ifelse(is.na(is_zero), 0, is_zero))
+
+participant_summary <- long_df_model %>%
+  group_by(participant) %>%
+  summarise(
+    mean_rating = mean(rating, na.rm = TRUE),
+    na_prop = mean(is_na),
+    .groups = "drop"
+  )
+```
+
+The more NAs, the higher the rating - suggests that there are missing ratings at the bottom of the scale (0s)
+```{r warning = FALSE}
+cor_test <- cor.test(participant_summary$mean_rating, participant_summary$na_prop)
+print(cor_test)
+```
+
+plotting
+```{r warning = FALSE}
+ggplot(participant_summary, aes(x = mean_rating, y = na_prop)) +
+  geom_point(alpha = 0.6, color = "tomato") +
+  geom_smooth(method = "lm", se = FALSE, color = "steelblue") +
+  labs(title = "Proportion of Missing Responses vs. Mean Rating",
+       x = "Mean Rating (excluding NAs)",
+       y = "Proportion of Missing Ratings (NAs)") +
+  theme_minimal()
+```
+
+OK so looks like NAs are positively correlated with values. Let's try looking at
+Cronbach's alpha:
+```{r include = FALSE}
+library(dplyr)
+library(tidyr)
+library(psych)  # for alpha()
+
+df_wide <- alldata[,c("participant","run","Q3_1","Q3_2","Q3_3")]
+```
+
+baseline alpha
+```{r warning = FALSE}
+alpha_results_list <- list()  # use a list instead of a tibble
+
+  for (val in 0:9) {
+    this_df <- df_wide %>%
+      dplyr::mutate(across(-participant, ~ifelse(is.na(.), val, .)))
+    alpha_val <- psych::alpha(this_df %>% select(-participant, -run), check.keys = TRUE)$total$raw_alpha
+    alpha_results_list <- bind_rows(alpha_results_list,
+                               tibble(imputed_value = val, alpha = alpha_val))
+}
+
+```
+View the list
+```{r warning = FALSE}
+print(alpha_results_list)
+```
+
+Alpha is quite high no matter what, but definitely highest when NAs are imputed at zero.
+```{r warning = FALSE}
+ggplot(alpha_results_list, aes(x = imputed_value, y = alpha)) +
+  geom_line(color = "steelblue", linewidth = 1.2) +
+  geom_point(size = 2) +
+  labs(
+    title = "Cronbach’s Alpha by Imputed Value (0–9)",
+    x = "Value Imputed for NAs",
+    y = "Cronbach’s Alpha"
+  ) +
+  theme_minimal()
+```
