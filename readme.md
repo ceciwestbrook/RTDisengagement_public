@@ -33,7 +33,7 @@ Two opposite phase-encoding (A>>P, P>>A) field maps were collected with resoluti
 This dataset corresponds to pre-registered analyses which can be found here: https://osf.io/qy4df.
 
  # Associated neural data # 
-This code is associated with a neural dataset published on openneuro.org. DOI for this dataset will be added when it becomes publicly available.
+This code is associated with a publicly-available dataset at https://openneuro.org/datasets/ds006683/versions/1.0.1.
 
  # Data collection and acknowledgements: # 
 Data were collected at the CMU-Pitt Brain Imaging Data Generation & Education (BRIDGE) Center in Pittsburgh, PA, USA.
