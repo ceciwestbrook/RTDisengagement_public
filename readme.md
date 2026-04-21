@@ -1,4 +1,4 @@
-# WorryMindfulness
+# Repetitive Thought Disengagement
 This is the accompanying analysis code for the RT Disengagement, PI Hallion. Please see our preregistration at https://osf.io/qy4df for more information.
 
 All code and associated documents were written by Ceci Westbrook 2022-2025 unless otherwise noted.
