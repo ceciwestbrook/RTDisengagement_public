@@ -1,0 +1,54 @@
+# ---------------------------------------------------------------------------
+# Data. Nothing under data/ is tracked except the placeholder READMEs that
+# describe what belongs there, and the example PsychoPy sessions.
+# ---------------------------------------------------------------------------
+data/**
+!data/**/
+!data/**/README.md
+!data/example/*.csv
+
+# Participant-generated content. The idiographic thought topics nominated by
+# participants are personally identifying and are never committed.
+manual_corrections.json
+alldata.csv
+*Thoughts?Interview*
+*Baseline?Questionnaire*
+
+# Tabular data anywhere in the tree
+*.csv
+!data/example/*.csv
+*.tsv
+*.sav
+*.xlsx
+*.pkl
+*.npy
+
+# Analysis outputs
+derivatives/
+figure_data/
+processed/
+group_level/
+verification/
+*.gfeat/
+*.feat/
+*_fsf_files/
+*.bak
+
+# Notebook cruft. Notebook outputs can contain participant thought content;
+# clear outputs before committing (see docs/MIGRATION.md).
+.ipynb_checkpoints
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+Untitled*.ipynb
+
+# Cluster logs
+log/
+logs/
+slurm-*.out
+*.o[0-9]*
+*.e[0-9]*
+
+# OS
+.DS_Store
+__MACOSX/

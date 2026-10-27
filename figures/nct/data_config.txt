@@ -1,0 +1,5 @@
+[data_info]
+Data_Name: thresh_zstat1
+Data_Space: FSLMNI2mm
+Data_Type: Metric
+Data_Threshold: [0,1]

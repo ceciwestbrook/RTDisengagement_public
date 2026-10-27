@@ -1,0 +1,32 @@
+{
+  "_doc": [
+    "TEMPLATE. The real manual_corrections.json is not distributed because its",
+    "'from' and 'to' fields contain participant-generated thought phrases.",
+    "",
+    "Purpose: the merge between the in-scanner trial file and the pre-scan",
+    "ratings is strict (exact match on normalized phrases). Where the two",
+    "sources disagree -- typos, a missing word, an apostrophe rendered as a",
+    "space, a more specific phrase on one side -- the strict merge fails for",
+    "that row. Each correction rewrites the in-scanner key to the pre-scan key",
+    "so the merge succeeds.",
+    "",
+    "To regenerate: run mvpa/data_merge.ipynb with an empty corrections list.",
+    "strict_merge_prescan() prints every unmatched (subject, thought_key) pair",
+    "alongside that subject's available pre-scan keys. Add one entry per pair",
+    "until nothing is unmatched. The published analyses used 22 corrections",
+    "across 17 subjects.",
+    "",
+    "If you received a copy of the questionnaire data with thought phrases",
+    "replaced by opaque identifiers (thought_01 ... thought_09), no corrections",
+    "are needed: the identifiers match exactly by construction. Leave the",
+    "corrections list empty."
+  ],
+  "corrections": [
+    {
+      "subject": 0,
+      "from": "<phrase as it appears in the in-scanner file>",
+      "to": "<phrase as it appears in the pre-scan file>",
+      "note": "<what differs, e.g. 'pre-scan typo'>"
+    }
+  ]
+}

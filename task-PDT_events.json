@@ -1,0 +1,71 @@
+{
+  "TaskName": "Repetitive Thought Disengagement Task",
+  "TaskDescription": "Participants viewed a self-generated reminder cue for one of nine idiographic repetitive-thought topics (32 s), then attempted to disengage from that thought while completing a Sustained Attention to Response Task (SART) go/no-go block (34-38 s), followed by a 2 s reflection period, six thought probes, and fixation. All nine thoughts appeared in each run, in a different order each run.",
+  "Instructions": "During the thought block, think about the topic named by the reminder phrase. When the SART begins, try to disengage from that thought and focus on the task: press the button after each digit, except when the digit is 8, in which case withhold your response.",
+  "onset": {
+    "Description": "Onset of the event, relative to the first volume of the run. Time zero is the scanner trigger; the first thought block began a mean of <0.1 s after trigger receipt.",
+    "Units": "s"
+  },
+  "duration": {
+    "Description": "Duration of the event.",
+    "Units": "s"
+  },
+  "response_time": {
+    "Description": "Latency from stimulus onset to the participant's button press. For SART trials this is the go/no-go response; for thought probes it is the time taken to submit the slider rating. n/a where no response was made.",
+    "Units": "s"
+  },
+  "response": {
+    "Description": "The response the participant actually made on this trial. For SART trials, 2 indicates a button press and n/a indicates no press. For thought probes, the slider position from 0 to 100."
+  },
+  "correct": {
+    "Description": "The response that would have been correct on this trial, given the trial type: 2 (a button press) on go trials, and n/a (withholding a response) on no-go trials. This is the expected answer, not a record of whether the participant was accurate; see corr_ans for accuracy."
+  },
+  "trial_type": {
+    "Description": "SART trial category. Go trials presented digits 1-7 or 9 and required a button press; no-go trials presented the digit 8 and required withholding a response. n/a for non-SART events.",
+    "Levels": {
+      "go": "Go trial (digits 1-7, 9); response required",
+      "nogo": "No-go trial (digit 8); response withheld"
+    }
+  },
+  "corr_ans": {
+    "Description": "Whether the participant's response matched the correct answer on this trial. n/a for non-SART events.",
+    "Levels": {
+      "1": "Correct: pressed the button on a go trial, or withheld a response on a no-go trial",
+      "0": "Incorrect: omitted a response on a go trial, or pressed the button on a no-go trial"
+    }
+  },
+  "thoughtNumber": {
+    "Description": "Within-run presentation order of the thought block, from 1 to 9. NOTE: this is presentation order only and is reshuffled between runs. It is NOT a stable identifier for a given thought. Use thought_uid to identify which thought a block refers to."
+  },
+  "thought_uid": {
+    "Description": "Stable within-participant identifier (t01-t09) for one of the participant's nine idiographic repetitive-thought topics. The same thought carries the same uid in every run, even though thoughtNumber changes. Values are arbitrary across participants: t01 for one participant bears no relation to t01 for another. Joins to the thought_uid column in phenotype/thought_ratings.tsv. This column replaces the participant-generated reminder phrase, which has been removed from this release to protect participant and third-party privacy; the mapping back to the original text is not distributed."
+  },
+  "Intensity": {
+    "Description": "Whether this thought was nominated by the participant as a high- or low-uncontrollability topic during the pre-scan idiographic interview.",
+    "Levels": {
+      "high": "High-uncontrollability topic",
+      "low": "Low-uncontrollability topic"
+    }
+  },
+  "probenumber": {
+    "Description": "Index of the thought probe within the probe block, from 1 to 6. All probes were answered on a 0-100 visual slider anchored 'not at all' to 'extremely', except probe 6 ('sleepy' to 'lively'). Probe 1 operationalizes disengagement success in the associated manuscript.",
+    "Levels": {
+      "1": "To what extent were your thoughts repetitive, intrusive, or hard to control?",
+      "2": "To what extent were your thoughts focused on the task?",
+      "3": "To what extent were you trying (making an effort) to focus on the task?",
+      "4": "To what extent did you feel afraid, scared, or frightened?",
+      "5": "To what extent did you feel sad, blue, or downhearted?",
+      "6": "To what extent did you feel: (sleepy / lively)"
+    }
+  },
+  "eventType": {
+    "Description": "Phase of the trial.",
+    "Levels": {
+      "Thoughtblock": "Presentation of the reminder cue; participant engages in the idiographic repetitive thought (32 s)",
+      "SART": "A single Sustained Attention to Response Task trial during the disengagement period",
+      "Reflect": "Brief reflection period preceding the probes (2 s; unmodeled in the associated manuscript)",
+      "ThoughtProbe": "A single thought probe question answered on a 0-100 visual slider",
+      "Fixation": "Inter-trial fixation cross (unmodeled in the associated manuscript)"
+    }
+  }
+}
