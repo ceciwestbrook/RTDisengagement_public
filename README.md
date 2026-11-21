@@ -64,7 +64,7 @@ Then, in order:
    `move_nifti_and_deface.sh` documents the DICOM-to-BIDS organisation and the
    pydeface step, including the runA/runB/runC to run-01/02/03 mapping.
 
-1. **Preprocessing** — `fsl/preprocessing/fmriprep_arraybatch.sh`, then
+1. **Preprocessing** — `fsl/preprocessing/submit_fmriprep.sh`, then
    `make_motion_confound_files.sh`, which calls
    `extract_motion_confounds.R` per subject and run to build FEAT-ready
    confound matrices (24 motion parameters plus FD ≥ 0.6 spike regressors).

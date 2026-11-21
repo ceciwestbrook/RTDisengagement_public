@@ -1,61 +1,55 @@
 #!/bin/bash
-# Script written in April 2022 by Ceci Westbrook
-
-# Batch options I have found to work best on HTC
-# Inputs ----------------------------------
+# fMRIPrep, one subject per array task. Submit with submit_fmriprep.sh (same folder),
+# or directly:  sbatch --clusters=$TREW_SLURM_CLUSTER --array=0 fmriprep_arraybatch.sh
+# Array index N = Nth subject (0-based) in sorted order of $TREW_DATA_ROOT/rawdata/sub-*.
+# Environment (see setup_env.sh): TREW_DATA_ROOT required. Optional overrides:
+#   TREW_FMRIPREP_SIMG  (default $TREW_DATA_ROOT/fmriprep-24.1.1.simg)
+#   TREW_FS_LICENSE     (default $TREW_DATA_ROOT/license_free_surfer.txt)
+#   TREW_FMRIPREP_WORK  (default $TREW_DATA_ROOT/work; large, safe to delete afterwards)
 #SBATCH -J fmriprep
 #SBATCH --time=12:00:00
-#SBATCH --cluster=${TREW_SLURM_CLUSTER}
 #SBATCH -N 1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=32G
-#SBATCH --array=50-50
-# Outputs ----------------------------------
-#SBATCH -o log/%x-%A-%a.out
-#SBATCH -e log/%x-%A-%a.err
-# ------------------------------------------
 
-# creates an array of all subjects from directories in BIDS dir (rawdata)
-subs=()
-for dir in `ls -d ${TREW_DATA_ROOT}/rawdata/*`; do
-	rawname=`basename $dir`
-	subject=`echo ${rawname} | grep -Eo '[0-9]{3}'`
-	subs+=($subject)
-done
+set -eu
+: "${TREW_DATA_ROOT:?run: source setup_env.sh}"
+: "${SLURM_ARRAY_TASK_ID:?submit as an array job, e.g. --array=0}"
 
-# chooses a subset of #x subjects starting at index #n
-n=$SLURM_ARRAY_TASK_ID # index of subject to start at
-x=1 # number of subjects to run
-uniq_subs=($(printf "%s\n" ${subs[@]} | sort -u))
-subjectlist="${uniq_subs[@]:${n}:${x}}"
-echo "Running batch: $subjectlist ncores: 16 mem: 32G"
+BIDS_dir=$TREW_DATA_ROOT/rawdata
+preprocessed_dir=$TREW_DATA_ROOT/preprocessed
+work_dir=${TREW_FMRIPREP_WORK:-$TREW_DATA_ROOT/work}
+fsfileloc=${TREW_FS_LICENSE:-$TREW_DATA_ROOT/license_free_surfer.txt}
+simg=${TREW_FMRIPREP_SIMG:-$TREW_DATA_ROOT/fmriprep-24.1.1.simg}
 
-# Build the fmriprep command
-base_dir=${TREW_DATA_ROOT}/
-BIDS_dir=$base_dir/rawdata
-preprocessed_dir=$base_dir/preprocessed
-fsfileloc=$base_dir/license_free_surfer.txt
-singularity_cmd="singularity run --cleanenv --bind $base_dir:$base_dir $base_dir/fmriprep-24.1.1.simg"
+subs=($(ls -d "$BIDS_dir"/sub-* | xargs -n1 basename | sed 's/^sub-//' | sort -u))
+subject="${subs[$SLURM_ARRAY_TASK_ID]:-}"
+if [ -z "$subject" ]; then
+  echo "No subject at index $SLURM_ARRAY_TASK_ID (${#subs[@]} subjects in $BIDS_dir)" >&2
+  exit 1
+fi
+echo "Running subject: $subject (index $SLURM_ARRAY_TASK_ID of ${#subs[@]})"
 
-# Options - specify for individual study needs
-# The below run fmriprep on $subjectlist specified above
-# !!Important note! Make sure nprocs is set equal to cpus-per-task in the header!
-options="--fs-license-file $fsfileloc \
---nprocs 16 \
---ignore fieldmaps slicetiming \
---fd-spike-threshold 0.6 \
---output-spaces MNI152NLin6Asym:res-2 \
---participant-label $subjectlist \
---skip-bids-validation"
+# nprocs must equal --cpus-per-task above
+options=(--fs-license-file "$fsfileloc"
+  --nprocs 16
+  --work-dir "$work_dir"
+  --ignore fieldmaps slicetiming
+  --fd-spike-threshold 0.6
+  --output-spaces MNI152NLin6Asym:res-2
+  --participant-label "$subject"
+  --skip-bids-validation)
 
-# load singularity module
 module load singularity
+mkdir -p "$preprocessed_dir" "$work_dir"
+cd "$TREW_DATA_ROOT"
 
-# move to the location you're running fmriprep from (optional, but makes some things easier)
-cd ${TREW_DATA_ROOT}/
+singularity run --cleanenv --bind "$TREW_DATA_ROOT:$TREW_DATA_ROOT" "$simg" \
+  "$BIDS_dir" "$preprocessed_dir" participant "${options[@]}"
 
-# build the command, with option to write out for debugging purposes
-# including "time" to check how long batches take to run at different parameters--this writes out in the outfile
-cmd="$singularity_cmd $BIDS_dir $preprocessed_dir participant $options"
-echo $cmd
-eval $cmd
+# fMRIPrep can print "finished successfully" and still skip outputs after a node crash.
+n=$(find "$preprocessed_dir/sub-$subject" -name '*desc-preproc_bold.nii.gz' 2>/dev/null | wc -l)
+if [ "$n" -lt 1 ]; then
+  echo "fMRIPrep exited 0 but sub-$subject has no desc-preproc_bold outputs" >&2
+  exit 1
+fi

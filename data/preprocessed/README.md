@@ -9,7 +9,7 @@ preprocessed/sub-<ID>/ses-01/func/
     sub-<ID>_ses-01_task-PDT_run-<NN>_desc-confounds_timeseries.tsv
 ```
 
-Regenerate from rawdata with `fsl/preprocessing/fmriprep_arraybatch.sh`, or
+Regenerate from rawdata with `fsl/preprocessing/submit_fmriprep.sh`, or
 request the derivatives directly.
 
 Motion confound files consumed by FEAT are built from the confounds TSV by
