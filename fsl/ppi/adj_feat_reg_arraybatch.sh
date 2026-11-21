@@ -8,7 +8,7 @@
 # Inputs ----------------------------------
 #SBATCH -J adj_feat_reg
 #SBATCH --time=1:00:00
-#SBATCH --cluster=${TREW_SLURM_CLUSTER}
+# Cluster: pass on the command line, e.g. sbatch --clusters=$TREW_SLURM_CLUSTER ...
 #SBATCH -N 1
 #SBATCH --cpus-per-task=1
 #SBATCH --array=0-57

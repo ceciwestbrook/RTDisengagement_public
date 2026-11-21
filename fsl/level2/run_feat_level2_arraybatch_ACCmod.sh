@@ -5,7 +5,7 @@
 # Inputs ----------------------------------
 #SBATCH -J feat_level2
 #SBATCH --time=12:00:00
-#SBATCH --cluster=${TREW_SLURM_CLUSTER}
+# Cluster: pass on the command line, e.g. sbatch --clusters=$TREW_SLURM_CLUSTER ...
 #SBATCH -N 1
 #SBATCH --cpus-per-task=2
 #SBATCH --array=0-70
