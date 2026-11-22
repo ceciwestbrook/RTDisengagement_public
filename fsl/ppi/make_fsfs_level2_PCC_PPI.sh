@@ -2,7 +2,7 @@
 
 # This script replaces the subject and run numbers in template fsf files
 
-fsfdir=${TREW_REPO_ROOT}/fsl/PPI/PPI_level2_fsf_files/PCC_PPI
+fsfdir=${TREW_REPO_ROOT}/fsl/ppi/PPI_level2_fsf_files/PCC_PPI
 preprocdir=${TREW_DATA_ROOT}/preprocessed/
 
 for dir in `ls -d ${TREW_DATA_ROOT}/preprocessed/sub-*/`; do

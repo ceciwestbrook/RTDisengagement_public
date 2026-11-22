@@ -2,7 +2,7 @@
 
 # This script replaces the subject and run numbers in template fsf files
 
-fsfdir=${TREW_REPO_ROOT}/fsl/Level2/level2_fsf_files/nomod
+fsfdir=${TREW_REPO_ROOT}/fsl/level2/level2_fsf_files/nomod
 preprocdir=${TREW_DATA_ROOT}/preprocessed/
 
 for dir in `ls -d ${TREW_DATA_ROOT}/preprocessed/sub-*/`; do

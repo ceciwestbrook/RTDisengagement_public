@@ -28,7 +28,7 @@ x=1 # number of subjects to run
 uniq_subs=($(printf "%s\n" ${subs[@]} | sort -u))
 subject="${uniq_subs[@]:${n}:${x}}"
 
-fsfdir=${TREW_REPO_ROOT}/fsl/Level2/level2_fsf_files/indivthoughtmod
+fsfdir=${TREW_REPO_ROOT}/fsl/level2/level2_fsf_files/indivthoughtmod
 module load fsl
 echo "running $subject"
 

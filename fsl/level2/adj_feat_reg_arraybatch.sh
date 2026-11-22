@@ -30,7 +30,7 @@
 # ======================= settings ==========================================
 FSLDIR=/software/rhel9/manual/install/fsl/6.0.7.18
 PROC=${TREW_PROCESSED_DIR}/
-SUBJECT_LIST=${TREW_REPO_ROOT}/fsl/Level1/subjects_run1.txt
+SUBJECT_LIST=${TREW_REPO_ROOT}/fsl/level1/subjects_run1.txt
 
 # Models to process. Comment out any that are not ready yet.
 MODELS=(
