@@ -52,12 +52,16 @@ sed -e "s|FSLDIRPLACEHOLDER|${FSLDIR}|g" "$template" > "$out"
 
 ## 4. Scheduler specifics
 
-Fourteen submission scripts hardcode `--cluster=smp`. These are site-specific
-and now read from `fsl/config.sh`.
+Fourteen submission scripts hardcoded `--cluster=smp`. The cluster name is
+site-specific and now comes from `TREW_SLURM_CLUSTER` (default `htc`, set in
+`fsl/config.sh`).
+
+The cluster is no longer set in `#SBATCH` headers: `sbatch` does not expand shell
+variables there, so a header like `--cluster=${TREW_SLURM_CLUSTER}` does not do what
+it appears to. Pass it on the command line instead:
 
 ```bash
-grep -rl 'cluster=smp' fsl/ | xargs sed -i \
-  's|#SBATCH --cluster=smp|#SBATCH --cluster=${SLURM_CLUSTER}|'
+sbatch --clusters=$TREW_SLURM_CLUSTER <script>
 ```
 
 Array bounds also drift during debugging; check each wrapper covers the full
@@ -66,6 +70,9 @@ subject list rather than a leftover single-index range:
 ```bash
 grep -r 'array=' fsl/ | grep -v '0-'
 ```
+
+Hits in the fMRIPrep files and `fsl/README.md` are expected: `submit_fmriprep.sh`
+deliberately submits index 0 first, then the rest. Any other hit is a leftover range.
 
 ## 5. Files to drop
 
@@ -108,14 +115,15 @@ published results.
 **Hardcoded run number.** `run_feat_level1_arraybatch_*.sh` sets `run=3` near
 the top and must be edited and resubmitted once per run. There is no loop.
 
-**Leftover array restriction.** `fmriprep_arraybatch.sh` has
-`#SBATCH --array=50-50`, i.e. a single subject. It was last used for a
-one-off rerun. Restore the full range before reuse.
+**Leftover array restriction (fixed).** `fmriprep_arraybatch.sh` formerly had
+`#SBATCH --array=50-50`, a single subject left over from a one-off rerun. The
+range is no longer in the script: `submit_fmriprep.sh` sets it from the number
+of subjects in `rawdata/`.
 
-**Scheduler name case.** `fmriprep_arraybatch.sh` used `--cluster=SMP` while
-the FEAT wrappers used `--cluster=htc`. Both now read
-`${TREW_SLURM_CLUSTER}`, but note that fMRIPrep and FEAT were run on different
-partitions.
+**Scheduler name case (fixed).** `fmriprep_arraybatch.sh` used `--cluster=SMP`
+while the FEAT wrappers used `--cluster=htc`. Neither is in the scripts now; the
+cluster comes from `$TREW_SLURM_CLUSTER` on the command line. Note that fMRIPrep
+and FEAT were originally run on different partitions.
 
 **Volume count extraction.** The level-1 generators read the volume count with
 
