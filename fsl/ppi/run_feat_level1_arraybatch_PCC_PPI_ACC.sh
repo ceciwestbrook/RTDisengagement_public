@@ -14,7 +14,7 @@
 #SBATCH -e log/%x-%A-%a.err
 # ------------------------------------------
 
-run=1 #1, 2 or 3
+run=3 #1, 2 or 3
 
 # creates an array of all subjects from saved file
 subs=()
