@@ -46,7 +46,7 @@ PPI follows the same structure as the univariate pipeline: generate per-subject
 matrices with identity (`adj_feat_reg_arraybatch.sh`), then second level.
 Group-level designs are in `../group/designs/`.
 
-`level1_checkforfiles.sh` verifies that all expected first-level outputs exist
+`archive/ppi/level1_checkforfiles.sh` (archived) verifies that all expected first-level outputs exist
 before second level is submitted.
 
 ## Reported results
