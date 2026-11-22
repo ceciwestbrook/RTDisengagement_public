@@ -36,7 +36,6 @@ CONTRASTS=(
   dyscontrolmod/SARTdcBaseline
   dyscontrolandeffortmods/SARTdcBaseline
   dyscontrolmod/ThoughtdcBaseline
-  dyscontrolandACCmods/ThoughtblockdcBaseline
   ACCmod/SARTACCbaseline
   dyscontrolmod/ThoughtdcSARTdc
 )

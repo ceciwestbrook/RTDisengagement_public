@@ -2,7 +2,6 @@
 # extract average functional data across binary masks for each contrast.
 
 # we'll use the level1 feat with no mod to extract the timeseries
-featname="nomod_adjreg.feat"
 basedir="${TREW_PROCESSED_DIR}/"
 ROIdir="${TREW_REPO_ROOT}/fsl/ppi/ROIs"
 maskname=$1

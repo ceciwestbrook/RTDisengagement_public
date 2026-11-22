@@ -8,7 +8,6 @@ rest of the brain varies with a task modulator.
 | `PCC_PPI_DC` | PCC sphere | probe-caught dyscontrol |
 | `PCC_PPI_ACC` | PCC sphere | SART accuracy index |
 | `SARTACCcluster_PPI` | medial PFC cluster from the ACCmod contrast | SART accuracy index |
-| `PCC_PPI` | PCC sphere | omnibus: both modulators in one model |
 
 ## Seeds
 

@@ -48,8 +48,6 @@ file and one confounds file per run, plus an `.html` report. The Slurm state
 | `dyscontrolmod` | probe-caught dyscontrol |
 | `ACCmod` | SART accuracy |
 | `dyscontrolandeffortmods` | dyscontrol and probe-caught effort |
-| `dyscontrolandACCmods` | dyscontrol and accuracy |
-| `indivthoughtmod` | pre-scan dyscontrol for the individual thought |
 
 Each also carries an unmodulated SART-block regressor, thought-block regressors
 (unmodulated and modulated), and a probe-period nuisance regressor.

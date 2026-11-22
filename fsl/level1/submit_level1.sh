@@ -16,9 +16,8 @@ SCRIPTDIR=${TREW_REPO_ROOT}/fsl/level1
 
 # Models to submit. Edit this list as needed.
 MODELS=(
+  dyscontrolmod
   ACCmod
-  indivthoughtmod
-  dyscontrolandACCmods
   dyscontrolandeffortmods
 )
 

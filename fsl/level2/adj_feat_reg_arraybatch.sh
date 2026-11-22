@@ -35,13 +35,10 @@ SUBJECT_LIST=${TREW_REPO_ROOT}/fsl/level1/subjects_run1.txt
 # Models to process. Comment out any that are not ready yet.
 MODELS=(
   dyscontrolmod_censorRT
-  indivthoughtmod_censorRT
   ACCmod_censorRT
   dyscontrolandeffortmods_censorRT
-  dyscontrolandACCmods_censorRT
   PCC_PPI_DC
   PCC_PPI_ACC
-  PCC_PPI
 # SARTACCcluster_PPI       # seed depends on group maps; enable once rebuilt
 )
 # ===========================================================================
