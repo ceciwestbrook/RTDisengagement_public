@@ -25,13 +25,9 @@ how many contrasts they define and in what order. The mapping is:
 | dyscontrolmod | ThoughtdcSARTdc | 6 |
 | dyscontrolandeffortmods | **SARTdcBaseline** | **2** |
 | ACCmod | ThoughtVsBaseline / SARTsBaseline / ThoughtVsSART / SARTACCbaseline / ThoughtSARTACC | 1 / 2 / 3 / 4 / 5 |
-| dyscontrolandACCmods | ThoughtblockdcBaseline / SARTdcBaseline / SARTACCBaseline / SARTdcACC / ThoughtSARTdc | 1 / 2 / 3 / 4 / 5 |
-| indivthoughtmod | same ordering as dyscontrolmod | 1-6 |
-| nomod | ThoughtVsBaseline / SARTVsBaseline / ThoughtVsSART | 1 / 2 / 3 |
 | PPI_PCC_DC | SARTDCPPI / SARTPPI / SARTDC_SARTPPI / SARTDC_mod | 1 / 2 / 3 / 4 |
 | PPI_PCC_ACC | SARTACCPPI / SARTPPI / SARTACC_SARTPPI / SARTACC_mod | 1 / 2 / 3 / 4 |
 | SARTACCcluster_PPI | SARTACCPPI / SARTPPI / SARTACC_SARTPPI / SARTACC_mod | 1 / 2 / 3 / 4 |
-| PCC_PPI | TBPPI / SARTdcPPI / SARTACCPPI / SARTdcACCPPI | 1 / 2 / 3 / 4 |
 
 Note the two rows in bold: the same contrast name maps to cope4 in
 `dyscontrolmod` and cope2 in `dyscontrolandeffortmods`, because the
