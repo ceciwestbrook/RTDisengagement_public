@@ -8,7 +8,7 @@
 # Cluster: pass on the command line, e.g. sbatch --clusters=$TREW_SLURM_CLUSTER ...
 #SBATCH -N 1
 #SBATCH --cpus-per-task=2
-#SBATCH --array=0-70
+#SBATCH --array=0-60
 # Outputs ----------------------------------
 #SBATCH -o log/%x-%A-%a.out
 #SBATCH -e log/%x-%A-%a.err
