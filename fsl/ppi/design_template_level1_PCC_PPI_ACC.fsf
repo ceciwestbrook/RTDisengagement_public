@@ -317,7 +317,7 @@ set fmri(tempfilt_yn1) 1
 set fmri(deriv_yn1) 1
 
 # Custom EV file (EV 1)
-set fmri(custom1) "${TREW_REPO_ROOT}/fsl/Level1/fsl_level1_timingfiles/censorRT/SUBNUM/sub-SUBNUM_run-0RUNNUM_thoughtblock.txt"
+set fmri(custom1) "${TREW_REPO_ROOT}/fsl/level1/fsl_level1_timingfiles/censorRT/SUBNUM/sub-SUBNUM_run-0RUNNUM_thoughtblock.txt"
 
 # Orthogonalise EV 1 wrt EV 0
 set fmri(ortho1.0) 0
@@ -382,7 +382,7 @@ set fmri(tempfilt_yn2) 1
 set fmri(deriv_yn2) 1
 
 # Custom EV file (EV 2)
-set fmri(custom2) "${TREW_REPO_ROOT}/fsl/Level1/fsl_level1_timingfiles/censorRT/SUBNUM/sub-SUBNUM_run-0RUNNUM_SART.txt"
+set fmri(custom2) "${TREW_REPO_ROOT}/fsl/level1/fsl_level1_timingfiles/censorRT/SUBNUM/sub-SUBNUM_run-0RUNNUM_SART.txt"
 
 # Orthogonalise EV 2 wrt EV 0
 set fmri(ortho2.0) 0
@@ -447,7 +447,7 @@ set fmri(tempfilt_yn3) 1
 set fmri(deriv_yn3) 1
 
 # Custom EV file (EV 3)
-set fmri(custom3) "${TREW_REPO_ROOT}/fsl/Level1/fsl_level1_timingfiles/censorRT/SUBNUM/sub-SUBNUM_run-0RUNNUM_SART_ACCmod.txt"
+set fmri(custom3) "${TREW_REPO_ROOT}/fsl/level1/fsl_level1_timingfiles/censorRT/SUBNUM/sub-SUBNUM_run-0RUNNUM_SART_ACCmod.txt"
 
 # Orthogonalise EV 3 wrt EV 0
 set fmri(ortho3.0) 0
@@ -512,7 +512,7 @@ set fmri(tempfilt_yn4) 1
 set fmri(deriv_yn4) 1
 
 # Custom EV file (EV 4)
-set fmri(custom4) "${TREW_REPO_ROOT}/fsl/Level1/fsl_level1_timingfiles/censorRT/SUBNUM/sub-SUBNUM_run-0RUNNUM_thoughtprobeblock.txt"
+set fmri(custom4) "${TREW_REPO_ROOT}/fsl/level1/fsl_level1_timingfiles/censorRT/SUBNUM/sub-SUBNUM_run-0RUNNUM_thoughtprobeblock.txt"
 
 # Orthogonalise EV 4 wrt EV 0
 set fmri(ortho4.0) 0
@@ -577,7 +577,7 @@ set fmri(tempfilt_yn5) 0
 set fmri(deriv_yn5) 0
 
 # Custom EV file (EV 5)
-set fmri(custom5) "${TREW_REPO_ROOT}/fsl/PPI/seed_timeseries/PCC_seed/SUBNUM_runRUNNUM_seedtimeseries_PCC_seed"
+set fmri(custom5) "${TREW_REPO_ROOT}/fsl/ppi/seed_timeseries/PCC_seed/SUBNUM_runRUNNUM_seedtimeseries_PCC_seed"
 
 # Orthogonalise EV 5 wrt EV 0
 set fmri(ortho5.0) 0
