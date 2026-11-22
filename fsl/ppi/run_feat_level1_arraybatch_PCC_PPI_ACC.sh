@@ -57,7 +57,7 @@ fi
 module load fsl
 
 # build the command, with option to write out for debugging purposes
-featfile="${TREW_REPO_ROOT}/fsl/PPI/PPI_level1_fsf_files/PCC_PPI_ACC/sub-${subject}_ses-01_fsf-lv1_run-${run}_PCC_PPI_ACC.fsf"
+featfile="${TREW_REPO_ROOT}/fsl/ppi/PPI_level1_fsf_files/PCC_PPI_ACC/sub-${subject}_ses-01_fsf-lv1_run-${run}_PCC_PPI_ACC.fsf"
 cmd="feat $featfile"
 eval $cmd
 

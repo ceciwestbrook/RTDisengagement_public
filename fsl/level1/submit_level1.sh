@@ -12,7 +12,7 @@
 
 set -uo pipefail
 
-SCRIPTDIR=${TREW_REPO_ROOT}/fsl/Level1
+SCRIPTDIR=${TREW_REPO_ROOT}/fsl/level1
 
 # Models to submit. Edit this list as needed.
 MODELS=(

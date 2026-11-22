@@ -54,7 +54,7 @@ fi
 module load fsl
 
 # build the command, with option to write out for debugging purposes
-featfile="${TREW_REPO_ROOT}/fsl/Level1/level1_fsf_files/ACCmod/sub-${subject}_ses-01_fsf-lv1_run-${run}_ACCmod.fsf"
+featfile="${TREW_REPO_ROOT}/fsl/level1/level1_fsf_files/ACCmod/sub-${subject}_ses-01_fsf-lv1_run-${run}_ACCmod.fsf"
 cmd="feat $featfile"
 eval $cmd
 

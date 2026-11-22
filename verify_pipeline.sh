@@ -27,7 +27,7 @@ MVPA="${TREW_MVPA_DIR:-${TREW_WORK_ROOT:-$ROOT}}"
 PARCELS="${TREW_PARCELS_DIR:-$MVPA/derivatives/parcels/yeo_2011_motiononly}"
 OUTDIR="${TREW_VERIFY_OUT:-$ROOT/verification}"
 
-SUBJECT_LIST="$SCRIPTS/Level1/subjects_run1.txt"
+SUBJECT_LIST="$SCRIPTS/level1/subjects_run1.txt"
 RUNS=(1 2 3)
 
 # Sample size for the expensive design-matrix checks. Set to 0 for all subjects.
@@ -124,7 +124,7 @@ check_designs() {
   local tmp; tmp=$(mktemp -d)
   local n_built=0 n_bad=0
 
-  for model_dir in "$SCRIPTS"/Level1/level1_fsf_files/*/; do
+  for model_dir in "$SCRIPTS"/level1/level1_fsf_files/*/; do
     [[ -d "$model_dir" ]] || continue
     local model; model=$(basename "$model_dir")
     for s in $(sample_subjects); do
@@ -227,7 +227,7 @@ check_registration() {
 check_level2() {
   hdr "4. Level-2 design files"
   local n=0 n_bad=0
-  for f in "$SCRIPTS"/Level2/level2_fsf_files/*/*.fsf "$SCRIPTS"/PPI/PPI_level2_fsf_files/*/*.fsf; do
+  for f in "$SCRIPTS"/level2/level2_fsf_files/*/*.fsf "$SCRIPTS"/ppi/PPI_level2_fsf_files/*/*.fsf; do
     [[ -f "$f" ]] || continue
     n=$((n+1))
     local npts n_files n_missing mixed problems=""

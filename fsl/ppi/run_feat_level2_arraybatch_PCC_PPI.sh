@@ -28,7 +28,7 @@ x=1 # number of subjects to run
 uniq_subs=($(printf "%s\n" ${subs[@]} | sort -u))
 subject="${uniq_subs[@]:${n}:${x}}"
 
-fsfdir=${TREW_REPO_ROOT}/fsl/PPI/PPI_level2_fsf_files/PCC_PPI
+fsfdir=${TREW_REPO_ROOT}/fsl/ppi/PPI_level2_fsf_files/PCC_PPI
 module load fsl
 echo "running $subject"
 
