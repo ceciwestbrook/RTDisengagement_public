@@ -8,7 +8,7 @@ set -eu
 cluster=${TREW_SLURM_CLUSTER:-htc}
 logdir=${TREW_LOG_DIR:-$TREW_DATA_ROOT/logs}
 stagger=${TREW_STAGGER_MIN:-5}
-maxconc=${TREW_MAX_CONCURRENT:-5}
+maxconc=${TREW_MAX_CONCURRENT:-20}
 script="$(cd "$(dirname "$0")" && pwd)/fmriprep_arraybatch.sh"
 mkdir -p "$logdir"
 

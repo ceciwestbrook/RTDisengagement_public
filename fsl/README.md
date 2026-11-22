@@ -31,7 +31,7 @@ Optional settings (set before sourcing, or in your shell):
 |---|---|---|
 | `TREW_SLURM_CLUSTER` | `htc` | Slurm cluster |
 | `TREW_STAGGER_MIN` | `5` | Minutes between the first subject and the rest |
-| `TREW_MAX_CONCURRENT` | `5` | Maximum simultaneous subjects |
+| `TREW_MAX_CONCURRENT` | `20` | Maximum simultaneous subjects |
 | `TREW_LOG_DIR` | `$TREW_DATA_ROOT/logs` | Slurm log location |
 | `TREW_FMRIPREP_SIMG` | `$TREW_DATA_ROOT/fmriprep-24.1.1.simg` | Container image |
 | `TREW_FS_LICENSE` | `$TREW_DATA_ROOT/license_free_surfer.txt` | FreeSurfer license (keep out of the repository) |
