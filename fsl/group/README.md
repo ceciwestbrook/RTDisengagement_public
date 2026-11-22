@@ -6,7 +6,7 @@ cluster-corrected p < .05.
 
 ## Designs
 
-`designs/<model>/<contrast>/design.fsf` — 42 designs, one per model and
+`designs/<model>/<contrast>/design.fsf` — 24 designs, one per model and
 contrast. These were constructed individually rather than generated from a
 template, so they are the primary artefact and are included in full. All
 specify `mixed_yn 2` (FLAME 1) and `npts 57`.

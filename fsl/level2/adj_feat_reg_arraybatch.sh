@@ -28,7 +28,7 @@
 # ------------------------------------------
 
 # ======================= settings ==========================================
-FSLDIR=/software/rhel9/manual/install/fsl/6.0.7.18
+: "${FSLDIR:?run: module load fsl}"      # set by the fsl module; not hardcoded
 PROC=${TREW_PROCESSED_DIR}/
 SUBJECT_LIST=${TREW_REPO_ROOT}/fsl/level1/subjects_run1.txt
 
@@ -41,6 +41,9 @@ MODELS=(
   PCC_PPI_ACC
 # SARTACCcluster_PPI       # seed depends on group maps; enable once rebuilt
 )
+# Restrict to some models for a partial run, e.g.:
+#   TREW_MODELS="dyscontrolmod_censorRT" sbatch adj_feat_reg_arraybatch.sh
+if [[ -n "${TREW_MODELS:-}" ]]; then read -ra MODELS <<< "$TREW_MODELS"; fi
 # ===========================================================================
 
 IDENT="$FSLDIR/etc/flirtsch/ident.mat"
