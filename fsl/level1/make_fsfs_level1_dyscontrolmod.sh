@@ -3,6 +3,8 @@
 # This script replaces the subject and run numbers in template fsf files
 
 fsfdir=${TREW_REPO_ROOT}/fsl/level1/level1_fsf_files/dyscontrolmod
+mkdir -p "$fsfdir"
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
 preprocdir=${TREW_DATA_ROOT}/preprocessed/
 
 for dir in `ls -d ${TREW_DATA_ROOT}/preprocessed/sub-*/`; do
