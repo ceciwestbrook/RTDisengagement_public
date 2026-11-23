@@ -11,8 +11,8 @@ rest of the brain varies with a task modulator.
 
 ## Seeds
 
-`ROIs/make_sphereROIs.sh` builds the spherical seeds. The PCC seed is a 10 mm
-sphere; a 5 mm sphere was also made at the medial PFC peak. The
+`ROIs/make_sphereROIs.sh` builds the spherical seeds. The PCC seed is a sphere of
+radius 10 mm; a 5 mm sphere was also made at the medial PFC peak. The
 `SARTACCcluster` seed is not a sphere but the thresholded cluster from the
 group-level ACCmod contrast, so it depends on that analysis having been run
 first.
