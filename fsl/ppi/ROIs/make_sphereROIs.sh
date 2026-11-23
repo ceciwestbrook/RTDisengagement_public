@@ -9,7 +9,7 @@
 #		<mm>  is the width of the ROI. If you will always want it to be the same (say 10mm), then you can just delete the $5
 #				in the line starting with "echo", and replace the '$5' in the last line with the number you want (e.g. 10).
 
-infile='${FSLDIR}/data/standard/MNI152_T1_2mm_brain'
+infile="${FSLDIR}/data/standard/MNI152_T1_2mm_brain"
 
 # also added in a field to name the output mask something more memorable.
 # new use is:

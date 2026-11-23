@@ -52,3 +52,4 @@ slurm-*.out
 # OS
 .DS_Store
 __MACOSX/
+fsl/ppi/seed_timeseries/

@@ -8,7 +8,7 @@ maskname=$1
 outdir="${TREW_REPO_ROOT}/fsl/ppi/seed_timeseries/${maskname}"
 mask=$ROIdir/$2
 
-mkdir $outdir
+mkdir -p "$outdir"
 
 module load fsl
 
