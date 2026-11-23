@@ -13,7 +13,11 @@ for dir in `ls -d ${TREW_DATA_ROOT}/preprocessed/sub-*/`; do
 	rawname=`basename $dir`
 	subject=`echo ${rawname} | grep -Eo '[0-9]{3}'`
 
-	  sed 's/SUBNUM/'${subject}'/g' design_template_level2_SARTACCcluster_PPI.fsf | envsubst "$FSF_VARS" > $fsfdir'/sub-'${subject}'_ses-01_fsf-lv2_SARTACCcluster_PPI.fsf'
+	  RUNS=""
+	  for r in 1 2 3; do grep -qx "$subject" "$TREW_REPO_ROOT/fsl/level1/subjects_run$r.txt" && RUNS="$RUNS,$r"; done
+	  RUNS=${RUNS#,}
+	  case "$RUNS" in *,*) ;; *) echo "skip sub-$subject: in fewer than two run lists" >&2; continue ;; esac
+	  sed 's/SUBNUM/'${subject}'/g' design_template_level2_SARTACCcluster_PPI.fsf | envsubst "$FSF_VARS" | python3 "$TREW_REPO_ROOT/fsl/level2/trim_level2_runs.py" "$RUNS" > $fsfdir'/sub-'${subject}'_ses-01_fsf-lv2_SARTACCcluster_PPI.fsf'
 
 done
 

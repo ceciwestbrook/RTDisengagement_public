@@ -1,6 +1,6 @@
 # Psychophysiological interaction (PPI) analyses
 
-Four PPI models, each testing whether coupling between a seed region and the
+Three PPI models, each testing whether coupling between a seed region and the
 rest of the brain varies with a task modulator.
 
 | Model | Seed | Modulator |
@@ -17,7 +17,7 @@ sphere; a 5 mm sphere was also made at the medial PFC peak. The
 group-level ACCmod contrast, so it depends on that analysis having been run
 first.
 
-`ROIs/extract_timeseries_groupmasks.sh` extracts the mean seed timeseries per
+`extract_timeseries_groupmasks.sh` extracts the mean seed timeseries per
 subject and run from the first-level `filtered_func_data`, which is already
 denoised and high-pass filtered.
 
