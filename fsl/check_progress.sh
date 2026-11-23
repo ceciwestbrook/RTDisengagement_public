@@ -11,7 +11,7 @@
 #   nohup ./check_progress.sh > ./progress_$(date +%m%d_%H%M).txt 2>&1 &
 
 PROC=${TREW_PROCESSED_DIR}/
-N_EXPECTED=171   # 57 subjects x 3 runs
+N_EXPECTED=170   # 57 + 57 + 56 runs (sub-303 run 3 excluded)
 
 echo "Checked: $(date)"
 echo
@@ -20,14 +20,14 @@ echo "=== Completed level-1 analyses (stats/cope1.nii.gz present) ==="
 ls -d $PROC/sub-*/ses-01/level1/*/stats/cope1.nii.gz 2>/dev/null \
   | sed 's|.*/run[0-9]*_\(.*\)\.feat/stats.*|\1|' \
   | sort | uniq -c | sort -rn \
-  | awk -v exp=$N_EXPECTED '{printf "  %-42s %4d / %d\n", $2, $1, exp}'
+  | awk -v expected=$N_EXPECTED '{printf "  %-42s %4d / %d\n", $2, $1, expected}'
 
 echo
 echo "=== adjreg copies (reg/standard.nii.gz present) ==="
 ls -d $PROC/sub-*/ses-01/level1/*_adjreg.feat/reg/standard.nii.gz 2>/dev/null \
   | sed 's|.*/run[0-9]*_\(.*\)_adjreg\.feat/reg.*|\1|' \
   | sort | uniq -c | sort -rn \
-  | awk -v exp=$N_EXPECTED '{printf "  %-42s %4d / %d\n", $2, $1, exp}'
+  | awk -v expected=$N_EXPECTED '{printf "  %-42s %4d / %d\n", $2, $1, expected}'
 
 echo
 echo "=== level-2 outputs (.gfeat directories) ==="
@@ -46,6 +46,6 @@ fi
 
 echo
 echo "=== recent job states ==="
-sacct -u "$USER" -M htc --format=State --noheader 2>/dev/null \
+sacct -X -S now-3days -u "$USER" -M htc --format=State --noheader 2>/dev/null \
   | awk '{print $1}' | sort | uniq -c | sort -rn \
   | awk '{printf "  %-14s %4d\n", $2, $1}'
