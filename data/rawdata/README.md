@@ -12,14 +12,20 @@ rawdata/sub-<ID>/ses-01/fmap/
     (two opposite phase-encoding field maps)
 ```
 
-Available from OpenNeuro `ds006683` (public on publication).
+Available from OpenNeuro `ds006683`, which also holds `stimuli/thought_ratings.tsv`
+(pre-scan ratings of each participant's nine thoughts), `phenotype/` (trait and
+clinical measures), `participants.tsv`, and `task-PDT_events.json`, the data
+dictionary for the events files.
 
 ## events.tsv
 
-One row per SART trial (`trial_type` of `go` or `nogo`) and one row per block
-(`eventType` of `Thoughtblock`, `ThoughtProbe`). Columns used by this pipeline:
-`onset`, `duration`, `trial_type`, `eventType`, `thoughtNumber`, `response_time`,
-`accuracy`.
+One row per event. Columns: `onset`, `duration`, `response_time`, `response`,
+`correct`, `trial_type`, `corr_ans`, `thoughtNumber`, `thought_uid`,
+`Intensity`, `probenumber` and `eventType`; `task-PDT_events.json` describes
+each. `eventType` is one of `Thoughtblock`, `SART`, `ThoughtProbe`, `Reflect`
+or `Fixation`. `thoughtNumber` is presentation order and is reshuffled between
+runs; `thought_uid` identifies the thought and is the same in every run.
 
-The OpenNeuro copy has the `Thought` column (the participant's reminder phrase)
-removed. `mvpa/events_loader.py` tolerates its absence.
+The reminder phrase (the `Thought` column in the original PsychoPy output) is
+not in the OpenNeuro copy; `thought_uid` replaces it. `mvpa/events_loader.py`
+tolerates its absence.

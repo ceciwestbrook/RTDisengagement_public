@@ -39,13 +39,18 @@ its neighbours, biasing single-subnetwork importance toward zero. See
 
 ## The merge, and what you can run without the withheld data
 
-`merge.py` matches in-scanner trials to pre-scan ratings on
+`merge.py` was written to match in-scanner trials to pre-scan ratings on
 (subject, normalized thought phrase). The phrases are participant-generated and
-are not distributed. Questionnaire copies supplied on request have them replaced
-with opaque per-subject identifiers, which supports the merge without exposing
-content — the merge needs consistent matching, not readable text.
+are not distributed. In the OpenNeuro dataset each thought carries an opaque
+identifier instead (`thought_uid`, in both the `events.tsv` files and
+`stimuli/thought_ratings.tsv`), which supports the merge without exposing
+content: the merge needs consistent matching, not readable text.
+
+`merge.py` and `questionnaire_loader.py` read the original PsychoPy and
+Qualtrics exports and have not been adapted to the public files, so running the
+analyses from the OpenNeuro data needs a loader for `stimuli/thought_ratings.tsv`
+that joins on `thought_uid`.
 
 `manual_corrections.json` reconciles phrase mismatches between the two sources
-and is likewise not distributed; see `manual_corrections.template.json` for the
-format and how to regenerate it. With identifier-substituted data, no
-corrections are needed.
+and is not distributed; see `manual_corrections.template.json` for the format.
+Matching on `thought_uid` needs no corrections.
