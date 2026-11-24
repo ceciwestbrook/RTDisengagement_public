@@ -102,10 +102,12 @@ but on another system it is usually simpler to ignore the wrappers and call
 ## Data
 
 Not tracked in this repository. `data/README.md` describes the expected layout
-and what is available where. In summary: imaging data on OpenNeuro
-([`ds006683`](https://openneuro.org/datasets/ds006683), public on publication);
-behavioural and questionnaire data on request; participant-nominated thought
-topics not shared in any form.
+and where each file is in the dataset. In summary: every input is in OpenNeuro
+([`ds006683`](https://openneuro.org/datasets/ds006683)): raw imaging, an
+`events.tsv` for every run, the pre-scan thought ratings (`stimuli/`) and the
+trait measures (`phenotype/`). Participant-nominated thought phrases are not
+shared in any form, and the original PsychoPy session files are no longer
+accessible.
 
 ## Software
 

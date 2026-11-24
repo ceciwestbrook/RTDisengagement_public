@@ -1,16 +1,12 @@
 # questionnaires/
 
-Pre-scan thought ratings and trait questionnaires. **Available on request.**
+The pre-scan thought ratings and the trait and clinical measures are in the
+OpenNeuro dataset, not in this folder:
 
-| File | Contents |
+| What | Where in the dataset |
 |---|---|
-| Pre-scan thought ratings | per-thought ratings of repetitiveness, intrusiveness and uncontrollability; the dyscontrol composite is their mean |
-| Baseline questionnaire | PTQ, PSWQ, and other trait measures |
+| Pre-scan ratings: content, form, quality and emotion ratings for each of the nine thoughts, with `dyscontrol_raw` and `dyscontrol_imputed` | `stimuli/thought_ratings.tsv` (one row per participant and thought, joined to the events files by `thought_uid`) |
+| ADIS diagnoses, PSWQ, PTQ and PTQ screening scores | `phenotype/` |
 
-Both are Qualtrics exports. `mvpa/questionnaire_loader.py` parses them.
-
-The pre-scan export includes each participant's nominated thought topics as
-free text. Copies supplied on request have these replaced with opaque
-per-subject identifiers (`thought_01` ... `thought_09`), which is sufficient
-for every analysis in the paper: the merge only needs thoughts to be matched
-consistently between the pre-scan and in-scanner files, not to be readable.
+`mvpa/config.py` and `mvpa/questionnaire_loader.py` were written for the
+original Qualtrics exports and have not been adapted to these files.

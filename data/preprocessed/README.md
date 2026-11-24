@@ -9,8 +9,8 @@ preprocessed/sub-<ID>/ses-01/func/
     sub-<ID>_ses-01_task-PDT_run-<NN>_desc-confounds_timeseries.tsv
 ```
 
-Regenerate from rawdata with `fsl/preprocessing/submit_fmriprep.sh`, or
-request the derivatives directly.
+Regenerate from rawdata with `fsl/preprocessing/submit_fmriprep.sh` (about 2 to
+2.7 hours per subject). The OpenNeuro dataset does not include these derivatives.
 
 Motion confound files consumed by FEAT are built from the confounds TSV by
 `fsl/preprocessing/extract_motion_confounds.R` and written alongside it as
